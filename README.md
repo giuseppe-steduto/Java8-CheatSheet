@@ -1,5 +1,5 @@
 
-# JAVA 8 - Cheat Sheet
+# JAVA 8 - Functional Programming Cheat Sheet
 
 ## Lambda Expression
 ```java
@@ -11,6 +11,8 @@ a -> a * 2; // or simply without type
 ```
 
 If the lambda is more than one expression we can use `{ }` and `return`
+PS: Don't forget Optional (like Map<T, Optional<T>>) with some Collection methods (like Collectors.maxBy).
+
 
 ```java
 (x, y) -> {
@@ -42,7 +44,7 @@ List<String> list = [Bohr, Darwin, Galilei, Tesla, Einstein, Newton]
 
 ## Collections
 
-**sort** `sort(list, comparator)`
+**sort** `void sort(list, comparator)`
 
 ```java
 list.sort((a, b) -> a.length() - b.length())
@@ -51,7 +53,7 @@ list.sort(Comparator.comparing(String::length)); // same
 //> [Bohr, Tesla, Darwin, Newton, Galilei, Einstein]
 ```
 
-**removeIf**
+**removeIf** `boolean removeIf (Predicate<?  super E>  filter)`
 
 ```java
 list.removeIf(w -> w.length() < 6);
@@ -141,7 +143,7 @@ Set<String> mySet = stream.collect(Collectors.toSet());
 String str = list.collect(Collectors.joining(", "));
 ```
 
-**map** `map(mapper)`<br>
+**map** `Stream<R> map(Function<? super T,? extends R> mapper)`<br>
 Applying a function to each element
 
 ```java
@@ -154,7 +156,7 @@ res = Stream.of(1,2,3,4,5).map(x -> x + 1);
 //> 2 3 4 5 6
 ```
 
-**filter** `filter(predicate)`<br>
+**filter** `Stream<T> filter(Predicate<? super T> predicate)`<br>
 Retains elements that match the predicate
 
 ```java
@@ -166,8 +168,8 @@ res = Stream.of(1,2,3,4,5).filter(x -> x < 3);
 //> 1 2
 ```
 
-**reduce**<br>
-Reduce the elements to a single value
+**reduce** `Optional<T> reduce(BinaryOperator<T> accumulator)` <br>
+Reduce the elements to a single value. Does not return a stream, but an optional!
 
 ```java
 String reduced = stream
@@ -175,7 +177,7 @@ String reduced = stream
 //> |Bohr|Darwin|Galilei|Tesla|Einstein|Newton
 ```
 
-**limit** `limit(maxSize)`
+**limit** `Stream<T> limit(long n)`
 The n first elements
 
 ```java
@@ -183,7 +185,7 @@ res = stream.limit(3);
 //> Bohr Darwin Galilei
 ```
 
-**skip**
+**skip** `Stream<T> skip(long n)`
 Discarding the first n elements
 
 ```java
@@ -191,7 +193,7 @@ res = strem.skip(2); // skip Bohr and Darwin
 //> Galilei Tesla Einstein Newton
 ```
 
-**distinct**
+**distinct** `Stream<T> distinct()`
 Remove duplicated elemetns
 
 ```java
@@ -199,7 +201,7 @@ res = Stream.of(1,0,0,1,0,1).distinct();
 //> 1 0
 ```
 
-**sorted**
+**sorted** `Stream<T> sorted()` or `Stream<T> sorted(Comparator<? super T> comparator)`
 Sort elements (must be *Comparable*)
 
 ```java
@@ -207,21 +209,26 @@ res = stream.sorted();
 //> Bohr Darwin Einstein Galilei Newton Tesla 
 ```
 
-**allMatch**
+**allMatch** `boolean allMatch(Predicate<? super T> predicate)`
 
 ```java
 // Check if there is a "e" in each elements
 boolean res = words.allMatch(n -> n.contains("e"));
 ```
 
-anyMatch: Check if there is a "e" in an element<br>
-noneMatch: Check if there is no "e" in elements
+**anyMatch:** `boolean anyMatch(Predicate<? super T> predicate)`
+Check if there is a "e" in an element<br>
+
+**noneMatch:** `boolean noneMatch(Predicate<? super T> predicate)`
+Check if there is no "e" in elements
 
 **parallel**
 Returns an equivalent stream that is parallel
 
-**findAny**
+**findAny** `Optional<T> findAny()`
 faster than findFirst on parallel streams
+
+**findFirst** `Optional<T> findFirst()`
 
 ### Primitive-Type Streams
 
