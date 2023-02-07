@@ -44,7 +44,7 @@ List<String> list = [Bohr, Darwin, Galilei, Tesla, Einstein, Newton]
 
 ## Collections
 
-**sort** `void sort(list, comparator)`
+**sort**  `void sort(list, comparator)`
 
 ```java
 list.sort((a, b) -> a.length() - b.length())
@@ -129,7 +129,7 @@ list.stream(); // or from a list
 Stream<Integer> integers = Stream.iterate(0, n -> n + 1);
 ```
 
-**Collecting results**
+**Collecting results into collections**
 
 ```java
 // Collect into an array (::new is the constructor reference)
@@ -143,6 +143,7 @@ Set<String> mySet = stream.collect(Collectors.toSet());
 String str = list.collect(Collectors.joining(", "));
 ```
 
+### Methods
 **map** `Stream<R> map(Function<? super T,? extends R> mapper)`<br>
 Applying a function to each element
 
@@ -177,7 +178,7 @@ String reduced = stream
 //> |Bohr|Darwin|Galilei|Tesla|Einstein|Newton
 ```
 
-**limit** `Stream<T> limit(long n)`
+**limit** `Stream<T> limit(long n)`<br>
 The n first elements
 
 ```java
@@ -185,7 +186,7 @@ res = stream.limit(3);
 //> Bohr Darwin Galilei
 ```
 
-**skip** `Stream<T> skip(long n)`
+**skip** `Stream<T> skip(long n)`<br>
 Discarding the first n elements
 
 ```java
@@ -193,7 +194,7 @@ res = strem.skip(2); // skip Bohr and Darwin
 //> Galilei Tesla Einstein Newton
 ```
 
-**distinct** `Stream<T> distinct()`
+**distinct** `Stream<T> distinct()`<br>
 Remove duplicated elemetns
 
 ```java
@@ -201,7 +202,7 @@ res = Stream.of(1,0,0,1,0,1).distinct();
 //> 1 0
 ```
 
-**sorted** `Stream<T> sorted()` or `Stream<T> sorted(Comparator<? super T> comparator)`
+**sorted** `Stream<T> sorted()` or `Stream<T> sorted(Comparator<? super T> comparator)`<br>
 Sort elements (must be *Comparable*)
 
 ```java
@@ -209,26 +210,27 @@ res = stream.sorted();
 //> Bohr Darwin Einstein Galilei Newton Tesla 
 ```
 
-**allMatch** `boolean allMatch(Predicate<? super T> predicate)`
+**allMatch** `boolean allMatch(Predicate<? super T> predicate)`<br>
 
 ```java
 // Check if there is a "e" in each elements
 boolean res = words.allMatch(n -> n.contains("e"));
 ```
 
-**anyMatch:** `boolean anyMatch(Predicate<? super T> predicate)`
+**anyMatch:** `boolean anyMatch(Predicate<? super T> predicate)`<br>
 Check if there is a "e" in an element<br>
 
-**noneMatch:** `boolean noneMatch(Predicate<? super T> predicate)`
+**noneMatch:** `boolean noneMatch(Predicate<? super T> predicate)`<br>
 Check if there is no "e" in elements
 
-**parallel**
+**parallel**<br>
 Returns an equivalent stream that is parallel
 
-**findAny** `Optional<T> findAny()`
-faster than findFirst on parallel streams
+**findFirst** `Optional<T> findFirst()`<br>
+Returns the first item of the stream
 
-**findFirst** `Optional<T> findFirst()`
+**findAny** `Optional<T> findAny()`<br>
+faster than findFirst on parallel streams
 
 ### Primitive-Type Streams
 
@@ -245,34 +247,35 @@ Random gen = new Random();
 IntStream rand = gen(1, 9); // stream of randoms
 ```
 
-Use *mapToX* (mapToObj, mapToDouble, etc.) if the function yields Object, double, etc. values.
+> When the function used in `map` yields  an `int`, `double`, `Object`,
+> you can use Use `mapToX` (`mapToInt`, `mapToDouble`, etc.) to return an `IntStream`, `DoubleStream`, ...
 
-### Grouping Results
+## Grouping Results from streams into collections
 
-**Collectors.groupingBy**
+### The `collect()` method
+`<R,A> R	collect(Collector<? super T,A,R> collector)`<br>
+Allows a stream to be converted into a collection. It needs a Collector object to perform the 
+transformation.
+
+### Types of collectors
+
+**groupingBy** `Collectors.groupingBy(Function<? super T,? extends K> classifier)`<br>
+Just like the SQL GROUP BY, groups objects by a specific property, and store the end result in a map
 
 ```java
-// Groupe by length
+// Group by length
 Map<Integer, List<String>> groups = stream
 	.collect(Collectors.groupingBy(w -> w.length()));
 //> 4=[Bohr], 5=[Tesla], 6=[Darwin, Newton], ...
 ```
 
-**Collectors.toSet**
-
-```java
-// Same as before but with Set
-... Collectors.groupingBy(
-	w -> w.substring(0, 1), Collectors.toSet()) ...
-```
-
-**Collectors.counting**
+**Collectors.counting**<br>
 Count the number of values in a group
 
-**Collectors.summing__**
+**Collectors.summing__**<br>
 `summingInt`, `summingLong`, `summingDouble` to sum group values
 
-**Collectors.averaging__**
+**Collectors.averaging__**<br>
 `averagingInt`, `averagingLong`, ... 
 
 ```java
@@ -330,7 +333,7 @@ Optional<Double> squareRoot(double x) {
 
 ---
 
-**Note on inferance limitations**
+### Note on inferance limitations
 
 ```java
 interface Pair<A, B> {
